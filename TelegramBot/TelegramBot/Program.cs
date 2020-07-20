@@ -29,7 +29,7 @@ namespace TelegramBot
             var message = messageEventArgs.Message;
             if (message?.Type == MessageType.Text)
             {
-                var result = _commandService.ExecuteCommandAsync(message.Text);
+                var result = _commandService.ExecuteCommand(message.Text);
                 foreach (var msg in result)
                 {
                     await _client.SendTextMessageAsync(message.Chat.Id, $"{msg.ToString()}");

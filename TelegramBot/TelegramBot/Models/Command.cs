@@ -9,7 +9,10 @@ namespace TelegramBot.Models
     public delegate void OptionalAction(object obj = null);
     class Command
     {
-        public string Name { get; set; }
+        public string Description { get; set; }
+        public string Pattern { get; set; }
+
         public OptionalAction Action;
+
     }
 }

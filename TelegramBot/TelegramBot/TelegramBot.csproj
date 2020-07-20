@@ -126,7 +126,7 @@
     <Compile Include="Services\CommandService.cs" />
     <Compile Include="Services\GmailApiService.cs" />
     <Compile Include="Models\DailyEmail.cs" />
-    <Compile Include="Factories\DailyEmailFactory.cs" />
+    <Compile Include="Factories\EmailFactory.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\TelegramService.cs" />

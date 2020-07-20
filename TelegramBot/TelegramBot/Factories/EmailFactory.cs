@@ -9,37 +9,38 @@ using System.Threading.Tasks;
 
 namespace TelegramBot.Models
 {
-    public class DailyEmailFactory
+    public class EmailFactory
     {
         private List<DailyEmail> _dailyEmailList;
         private int Id = 1;
-        private bool IsDailyEmail = true;
-        public DailyEmailFactory()
+        private bool IsDateMath = false;
+        public EmailFactory()
         {
             _dailyEmailList = new List<DailyEmail>();
         }
 
-        public IEnumerable<DailyEmail> GetDailyEmails()
+        public IEnumerable<DailyEmail> GetEmails()
         {
             return _dailyEmailList;
         }
-        public bool GenerateDailyEmail(Message message)
+        public bool GenerateDateEmail(Message message, DateTime date)
         {
             var dailyEmail = new DailyEmail();
-            dailyEmail.EmailId = message.Id;
-            dailyEmail.Id = Id++;
 
             foreach (var mParts in message.Payload.Headers)
             {
                 if (mParts.Name == "Date")
                 {
-                    if (!Regex.IsMatch(mParts.Value, $"{GetCurrentDate()}"))
+                    var dt = Convert.ToDateTime(mParts.Value.Replace("GMT", string.Empty).Replace("(UTC)", string.Empty).Replace("(CDT)", string.Empty).Replace("(EEST)", string.Empty));
+                    if (Convert.ToDateTime(dt).Date < date.Date)
+                        return true;
+                    else if (Regex.IsMatch(mParts.Value, $"{GetDate(date)}"))
                     {
-                        IsDailyEmail = false;
-                        Id = 1;
+                        dailyEmail.Time = dt.ToShortDateString();
+                        IsDateMath = true;
                     }
                     else
-                        dailyEmail.Time = Convert.ToDateTime(mParts.Value.Replace("-0500 (CDT)", string.Empty)).ToShortDateString();
+                        Id = 1;
                 }
                 else if (mParts.Name == "From")
                 {
@@ -50,13 +51,18 @@ namespace TelegramBot.Models
                     dailyEmail.Subject = mParts.Value;
                 }
             }
-
-            if(IsDailyEmail)_dailyEmailList.Add(dailyEmail);
-            return IsDailyEmail;
+            if (IsDateMath)
+            {
+                dailyEmail.EmailId = message.Id;
+                dailyEmail.Id = Id++;
+                _dailyEmailList.Add(dailyEmail);
+                IsDateMath = false;
+            }
+            return IsDateMath;
         }
-        private string GetCurrentDate()
+        private string GetDate(DateTime date)
         {
-            var dateTime = DateTime.UtcNow.Date;
+            var dateTime = date;
             var day = dateTime.ToString("dd");
             var month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(int.Parse(dateTime.ToString("MM")));
             return $"\\b{day} {month.Remove(month.Length - 1)}";
