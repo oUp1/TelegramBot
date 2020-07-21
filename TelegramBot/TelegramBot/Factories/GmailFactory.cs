@@ -37,6 +37,5 @@ namespace TelegramBot
                 ApplicationName = ApplicationName,
             });
         }
-
     }
 }

@@ -2,10 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace TelegramBot.Models
 {
@@ -67,6 +64,5 @@ namespace TelegramBot.Models
             var month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(int.Parse(dateTime.ToString("MM")));
             return $"\\b{day} {month.Remove(month.Length - 1)}";
         }
-
     }
 }

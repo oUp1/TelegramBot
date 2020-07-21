@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using TelegramBot.Models;
 
@@ -62,6 +61,5 @@ namespace TelegramBot
         {
             _gmailApi.SendEmail(email);
         }
-
     }
 }

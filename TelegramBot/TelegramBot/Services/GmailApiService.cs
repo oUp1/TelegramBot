@@ -2,10 +2,7 @@
 using Google.Apis.Gmail.v1.Data;
 using MimeKit;
 using System;
-using System.Collections.Generic;
-using System.Net.Http;
 using System.Net.Mail;
-using System.Text;
 using System.Threading.Tasks;
 using TelegramBot.Models;
 

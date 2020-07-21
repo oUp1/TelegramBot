@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 using TelegramBot.Models;
 
 namespace TelegramBot.Services
@@ -38,88 +35,84 @@ namespace TelegramBot.Services
             catch (Exception ex) { Console.WriteLine(ex.Message); }
             return _result;
         }
-        private void GetDailyEmails(object parameters)
+        private void GetDailyEmails(string[] parameters)
         {
             IEnumerable<DailyEmail> emails = null;
             try
             {
                 emails = _serviceTelegram.GetDateEmails(DateTime.Now);
+                foreach (var msg in emails)
+                {
+                    _result.Add(msg.ToString());
+                }
+                _result.Add("done");
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
-
-            foreach (var msg in emails)
-            {
-                _result.Add(msg.ToString());
-            }
+            catch (Exception ex) { _result.Add($"Error - {ex.Message}"); }
         }
-        private void SendEmail(object parameters)
+        private void SendEmail(string[] parameters)
         {
-            var param = parameters as string[];
             var email = new Email()
             {
-                To = param[2],
-                Subject = param[3],
-                Text = param[4]
+                To = parameters[2],
+                Subject = parameters[3],
+                Text = parameters[4]
             };
             try
             {
                 _serviceTelegram.SendEmail(email);
+                _result.Add("done");
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            catch (Exception ex) { _result.Add($"Error - {ex.Message}"); }
 
-            _result.Add("done");
         }
-        private void Help(object parameters)
+        private void Help(string[] parameters)
         {
             foreach (var item in _commands)
             {
                 _result.Add(item.Description);
             }
         }
-        private void DeleteByDate(object parameters)
+        private void DeleteByDate(string[] parameters)
         {
-            var param = parameters as string[];
-
-            int day = int.Parse(param[2]);
-            int month = int.Parse(param[3]);
-            int year = int.Parse(param[4]);
-            var date = new DateTime(year, month, day);
-
             try
             {
+                int day = int.Parse(parameters[2]);
+                int month = int.Parse(parameters[3]);
+                int year = int.Parse(parameters[4]);
+                var date = new DateTime(year, month, day);
+
                 _serviceTelegram.DeleteEmail(date);
                 _result.Add("done");
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            catch (Exception ex) { _result.Add($"Error - {ex.Message}"); }
         }
-        private void DeleteDailyEmails(object parameters)
+        private void DeleteDailyEmails(string[] parameters)
         {
             try
             {
                 _serviceTelegram.DeleteEmail(DateTime.Now);
+                _result.Add("done");
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
-
-            _result.Add("done");
+            catch (Exception ex) { _result.Add($"Error - {ex.Message}"); }
         }
-        private void DeleteDailyEmail(object parameters)
+        private void DeleteDailyEmail(string[] parameters)
         {
-            var emailId = int.Parse((parameters as string[])[2]);
             try
             {
+                var emailId = int.Parse(parameters[2]);
                 _serviceTelegram.DeleteEmail(DateTime.Now, emailId);
                 _result.Add("done");
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            catch (Exception ex) { _result.Add($"Error - {ex.Message}"); }
         }
-        private void deleteAllEmails(object parameters)
+        private void deleteAllEmails(string[] parameters)
         {
             try
             {
                 _serviceTelegram.DeleteAllEmails();
                 _result.Add("done");
             }
-            catch (Exception ex) { Console.WriteLine(ex.Message); }
+            catch (Exception ex) { _result.Add($"Error - {ex.Message}"); }
         }
         private void GenerateCommands()
         {
