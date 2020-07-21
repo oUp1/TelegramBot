@@ -126,7 +126,7 @@ namespace TelegramBot.Services
             _commands = new List<Command>
             {
                 new Command(){Pattern=@"\/help", Description="/help", Action=Help},
-                new Command(){Pattern=@"\/dailyEmails", Description="/dailyEmails", Action=GetDailyEmails},
+                new Command(){Pattern=@"\/getTodaysEmails", Description="/getTodaysEmails", Action=GetDailyEmails},
                 new Command(){Pattern=@"\/deleteTodaysEmails", Description="/deleteTodaysEmails", Action=DeleteDailyEmails},
                 new Command(){Pattern=@"\/delete\/[0-9]", Description="/delete/emaildId", Action=DeleteDailyEmail},
                 new Command(){Pattern=@"\/sendEmail\/(.*)\/(.*)\/(.*)", Description="/sendEmail/to/subject/body", Action=SendEmail},
